@@ -783,5 +783,15 @@
                 }
             }
         }
-    ]
+    ],
+    "outputs": {
+        "VNGResourceID": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworkGateways', variables('gatewayHubName'))]"
+        },
+        "LNGResourceID": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName1'))]"
+        }
+    }
 }
