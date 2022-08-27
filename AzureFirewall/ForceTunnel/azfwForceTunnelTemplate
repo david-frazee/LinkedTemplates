@@ -1,0 +1,97 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceGroup1": {
+            "type": "string",
+            "defaultValue": "rg-fw-azurev2",
+            "metadata": {
+                "description": "Resource Group for the Azure environment"
+            }
+        },
+        "resourceGroup2": {
+            "type": "string",
+            "defaultValue": "rg-fw-onpremv2",
+            "metadata": {
+                "description": "Resource Group for the on-premises environment"
+            }
+        },
+        "adminUserName": {
+            "type": "string",
+            "defaultValue": "AzureUser",
+            "metadata": {
+                "description": "The admin user name for the Windows virtual machines."
+            }
+        },
+        "adminPassword": {
+            "type": "secureString",
+            "metadata": {
+                "description": "The admin password for the Windows virtual machines."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "location": "[deployment().location]",
+            "name": "[parameters('resourceGroup1')]",
+            "apiVersion": "2022-05-01"
+        },
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "location": "[deployment().location]",
+            "name": "[parameters('resourceGroup2')]",
+            "apiVersion": "2022-05-01"
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "azureLinkedTemplate",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup1'))]"
+            ],
+            "resourceGroup": "[parameters('resourceGroup1')]",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "adminUserName": {
+                        "value": "[parameters('adminUserName')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                },
+                "templateLink": {
+                    "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/azureLinkedTemplate.json",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "onPremLinkedTemplate",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup2'))]"
+            ],
+            "resourceGroup": "[parameters('resourceGroup2')]",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "adminUserName": {
+                        "value": "[parameters('adminUserName')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                },
+                "templateLink": {
+                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/onPremLinkedTemplate",
+                "contentVersion":"1.0.0.0"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
