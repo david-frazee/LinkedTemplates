@@ -110,24 +110,21 @@
             "resourceGroup": "[parameters('resourceGroup1')]",
             "properties": {
                 "mode": "Incremental",
-                "expressionEvaluationOptions": {
-                    "scope": "Inner"
-                },
                 "parameters": {
                     "sharedKey": {
                         "value": "[parameters('sharedKey')]"
                     },
                     "azureVNG": {
-                        "value": "[reference('Microsoft.Resource/deployments', 'azureLinkedTemplate').outputs.VNGResourceID.value]"
+                        "value": "[reference('azureLinkedTemplate').outputs.azureVNGResourceID.value]"
                     },
                     "azureLNG": {
-                        "value": "[reference('Microsoft.Resource/deployments', 'azureLinkedTemplate').outputs.LNGResourceID.value]"
+                        "value": "[reference('azureLinkedTemplate').outputs.azureLNGResourceID.value]"
                     },
                     "onPremVNG": {
-                        "value": "[reference('Microsoft.Resource/deployments', 'onPremLinkedTemplate').outputs.VNGResourceID.value]"
+                        "value": "[reference('onPremLinkedTemplate').outputs.onPremVNGResourceID.value]"
                     },
                     "onPremLNG": {
-                        "value": "[reference('Microsoft.Resource/deployments', 'onPremLinkedTemplate').outputs.LNGResourceID.value]"
+                        "value": "[reference('onPremLinkedTemplate').outputs.onPremLNGResourceID.value]"
                     }
                 },
                 "templateLink": {
@@ -140,19 +137,19 @@
     "outputs": {
         "azureVNGResourceID": {
             "type": "string",
-            "value": "[reference('azureLinkedTemplate').outputs.VNGResourceID.value]"
+            "value": "[reference('azureLinkedTemplate').outputs.azureVNGResourceID.value]"
         },
         "azureLNGResourceID": {
             "type": "string",
-            "value": "[reference('azureLinkedTemplate').outputs.LNGResourceID.value]"
+            "value": "[reference('azureLinkedTemplate').outputs.azureLNGResourceID.value]"
         },
         "onPremVNGResourceID": {
             "type": "string",
-            "value": "[reference('onPremLinkedTemplate').outputs.VNGResourceID.value]"
+            "value": "[reference('onPremLinkedTemplate').outputs.onPremVNGResourceID.value]"
         },
         "onPremLNGResourceID": {
             "type": "string",
-            "value": "[reference('onPremLinkedTemplate').outputs.LNGResourceID.value]"
+            "value": "[reference('onPremLinkedTemplate').outputs.onPremLNGResourceID.value]"
         }
     }
 }
