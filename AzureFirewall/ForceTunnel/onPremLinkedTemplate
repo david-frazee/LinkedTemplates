@@ -14,6 +14,9 @@
                             "metadata": {
                                 "description": "The admin password for the Windows virtual machines."
                             }
+                        },
+                        "workspaceID": {
+                            "type": "string"
                         }
                     },
                     "variables": {
@@ -38,8 +41,8 @@
                         "localNetworkGatewayName2": "lgw-onprem-network",
                         "routeTableName3": "route-gateway-snets",
                         "routeTableName4": "route-onprem-snets",
-                        "routeName01": "send-all-to-fw",
-                        "routeName04": "send-azure-to-fw",
+                        "routeName01": "to-snet",
+                        "routeName04": "to-fw",
                         "remoteNetworkVMName": "vm-onprem",
                         "remoteNetworkVMNicName": "nic-01-vm-onprem",
                         "vmSize": "Standard_D2s_v3",
@@ -224,6 +227,124 @@
                             ]
                         },
                         {
+                            "type": "Microsoft.Insights/diagnosticSettings",
+                            "apiVersion": "2021-05-01-preview",
+                            "scope": "[format('Microsoft.Network/azureFirewalls/{0}', variables('remoteFirewallName'))]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Network/azureFirewalls', variables('remoteFirewallName'))]"
+                            ],
+                            "name": "diagnosticSettings",
+                            "properties": {
+                                "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceID'))]",
+                                "logs": [
+                                    {
+                                        "category": "AzureFirewallNetworkRule",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AzureFirewallApplicationRule",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AzureFirewallDnsProxy",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWNetworkRule",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWApplicationRule",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWNatRule",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWThreatIntel",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWIdpsSignature",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWDnsQuery",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWFqdnResolveFailure",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWApplicationRuleAggregation",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWNetworkRuleAggregation",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    },
+                                    {
+                                        "category": "AZFWNatRuleAggregation",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "days": 0,
+                                            "enabled": true
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             "type": "Microsoft.Network/routeTables",
                             "apiVersion": "2020-05-01",
                             "name": "[variables('routeTableName3')]",
@@ -235,6 +356,14 @@
                                         "name": "[variables('routeName01')]",
                                         "properties": {
                                             "addressPrefix": "10.100.0.64/28",
+                                            "nextHopType": "VirtualAppliance",
+                                            "nextHopIpAddress": "10.100.0.132"
+                                        }
+                                    },
+                                    {
+                                        "name": "[variables('routeName04')]",
+                                        "properties": {
+                                            "addressPrefix": "13.89.172.22/32",
                                             "nextHopType": "VirtualAppliance",
                                             "nextHopIpAddress": "10.100.0.132"
                                         }

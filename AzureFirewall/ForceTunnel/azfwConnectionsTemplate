@@ -27,7 +27,11 @@
         "localNetworkGatewayName1": "lgw-azure-network",
         "localNetworkGatewayName2": "lgw-onprem-network",
         "connectionName1": "[concat('cn-', variables('localNetworkGatewayName2'),'-to-', variables('gatewayHubName'))]",
-        "connectionName2": "[concat('cn-', variables('localNetworkGatewayName1'),'-to-', variables('gatewayRemoteName'))]"
+        "connectionName2": "[concat('cn-', variables('localNetworkGatewayName1'),'-to-', variables('gatewayRemoteName'))]",
+        "identityName": "azfwMI",
+        "roleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
+        "scriptName": "PowerShellDefaultSite",
+        "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
     },
     "resources": [
         {
@@ -64,6 +68,57 @@
                 "routingWeight": 0,
                 "sharedKey": "[parameters('sharedKey')]",
                 "enableBGP": true
+            }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "name": "[variables('identityName')]",
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-10-01-preview",
+            "name": "[variables('roleAssignmentId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30').principalId]",
+                "scope": "[resourceGroup().id]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('scriptName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                    "[resourceId('Microsoft.Network/connections', variables('connectionName1'))]",
+                    "[resourceId('Microsoft.Network/connections', variables('connectionName2'))]",
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
+                    "[resourceId('Microsoft.Authorization/roleAssignments', variables('roleAssignmentId'))]"
+            ],
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {
+                    }
+                }
+            },
+            "kind": "AzurePowerShell",
+            "properties": {
+                "forceUpdateTag": "2",
+                "azPowerShellVersion": "8.0",
+                "scriptContent": "
+                    $LocalGateway = Get-AzLocalNetworkGateway -Name 'lgw-onprem-network' -ResourceGroupName 'rg-fw-onprem'
+                    $VirtualGateway = Get-AzVirtualNetworkGateway -Name 'vgw-vnet-hub-secured' -ResourceGroupName 'rg-fw-azure'
+                    Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway",
+                "timeout": "PT5M",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
             }
         }
     ]

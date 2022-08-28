@@ -79,7 +79,8 @@
             "apiVersion": "2021-04-01",
             "name": "onPremLinkedTemplate",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup2'))]"
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup2'))]",
+                "azureLinkedTemplate"
             ],
             "resourceGroup": "[parameters('resourceGroup2')]",
             "properties": {
@@ -90,11 +91,14 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
+                    },
+                    "workspaceID": {
+                        "value": "[reference('azureLinkedTemplate').outputs.workspaceResourceID.value]"
                     }
                 },
                 "templateLink": {
-                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/onPremLinkedTemplate",
-                "contentVersion":"1.0.0.0"
+                    "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/onPremLinkedTemplate",
+                    "contentVersion":"1.0.0.0"
                 }
             }
         },
@@ -104,8 +108,8 @@
             "name": "azfwConnectionsTemplate",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup1'))]",
-                "[resourceId('Microsoft.Resources/deployments', 'azureLinkedTemplate')]",
-                "[resourceId('Microsoft.Resources/deployments', 'onPremLinkedTemplate')]"
+                "azureLinkedTemplate",
+                "onPremLinkedTemplate"
             ],
             "resourceGroup": "[parameters('resourceGroup1')]",
             "properties": {
@@ -142,6 +146,10 @@
         "azureLNGResourceID": {
             "type": "string",
             "value": "[reference('azureLinkedTemplate').outputs.azureLNGResourceID.value]"
+        },
+        "workspaceResourceID": {
+            "type": "string",
+            "value": "[reference('azureLinkedTemplate').outputs.workspaceResourceID.value]"
         },
         "onPremVNGResourceID": {
             "type": "string",

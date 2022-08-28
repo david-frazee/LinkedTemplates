@@ -792,6 +792,10 @@
         "azureLNGResourceID": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName1'))]"
+        },
+        "workspaceResourceID": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.OperationalInsights/workspaces',variables('logAnalyticWorkspaceName'))]"
         }
     }
 }
