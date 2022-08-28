@@ -90,9 +90,6 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    },
-                    "workspaceID": {
-                        "value": "[reference('azureLinkedTemplate').outputs.workspaceResourceID.value]"
                     }
                 },
                 "templateLink": {

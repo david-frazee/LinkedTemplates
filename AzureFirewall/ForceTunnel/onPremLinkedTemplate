@@ -14,9 +14,6 @@
                             "metadata": {
                                 "description": "The admin password for the Windows virtual machines."
                             }
-                        },
-                        "workspaceID": {
-                            "type": "string"
                         }
                     },
                     "variables": {
