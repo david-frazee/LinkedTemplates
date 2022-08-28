@@ -17,6 +17,7 @@
         }
     },
     "variables": {
+        "identityName": "azfwMI",
         "hubNetworkName": "vnet-hub-secured",
         "hubNetworkAddressPrefix": "192.168.0.0/23",
         "hubNetworkGatewaySubnetName": "GatewaySubnet",
@@ -55,6 +56,12 @@
         "OsVersion": "2019-datacenter-gensecond"
     },
     "resources": [
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "name": "[variables('identityName')]",
+            "location": "[resourceGroup().location]"
+        },
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2020-05-01",
@@ -796,6 +803,14 @@
         "workspaceResourceID": {
             "type": "string",
             "value": "[resourceId('Microsoft.OperationalInsights/workspaces',variables('logAnalyticWorkspaceName'))]"
+        },
+        "userMIPrincipalID": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30').principalId]"
+        },
+        "userMIResourceID": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
         }
     }
 }
