@@ -28,6 +28,12 @@
             "metadata": {
                 "description": "The admin password for the Windows virtual machines."
             }
+        },
+        "sharedKey": {
+            "type": "secureString",
+            "metadata": {
+                "description": "Shared key (PSK) for IPSec tunnel"
+            }
         }
     },
     "variables": {},
@@ -91,7 +97,48 @@
                 "contentVersion":"1.0.0.0"
                 }
             }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "azfwConnectionsTemplate",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup1'))]",
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup2'))]",
+                "[resourceId('Microsoft.Resources/deployments', 'azureLinkedTemplate')]",
+                "[resourceId('Microsoft.Resources/deployments', 'onPremLinkedTemplate')]"
+            ],
+            "resourceGroup": "[parameters('resourceGroup1')]",
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "sharedKey": {
+                        "value": "[parameters('sharedKey')]"
+                    }
+                },
+                "templateLink": {
+                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/onPremLinkedTemplate",
+                "contentVersion":"1.0.0.0"
+                }
+            }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "azureVNGResourceID": {
+            "type": "string",
+            "value": "[reference('azureLinkedTemplate').outputs.VNGResourceID.value]"
+        },
+        "azureLNGResourceID": {
+            "type": "string",
+            "value": "[reference('azureLinkedTemplate').outputs.LNGResourceID.value]"
+        },
+        "onPremVNGResourceID": {
+            "type": "string",
+            "value": "[reference('onPremLinkedTemplate').outputs.VNGResourceID.value]"
+        },
+        "onPremLNGResourceID": {
+            "type": "string",
+            "value": "[reference('onPremLinkedTemplate').outputs.LNGResourceID.value]"
+        }
+    }
 }
