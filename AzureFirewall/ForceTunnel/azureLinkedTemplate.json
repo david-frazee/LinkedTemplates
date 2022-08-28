@@ -785,11 +785,11 @@
         }
     ],
     "outputs": {
-        "VNGResourceID": {
+        "azureVNGResourceID": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/virtualNetworkGateways', variables('gatewayHubName'))]"
         },
-        "LNGResourceID": {
+        "azureLNGResourceID": {
             "type": "string",
             "value": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName1'))]"
         }

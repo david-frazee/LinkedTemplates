@@ -397,11 +397,11 @@
                         }
                     ],
                     "outputs": {
-                        "VNGResourceID": {
+                        "onPremVNGResourceID": {
                             "type": "string",
                             "value": "[resourceId('Microsoft.Network/virtualNetworkGateways', variables('gatewayRemoteName'))]"
                         },
-                        "LNGResourceID": {
+                        "onPremLNGResourceID": {
                             "type": "string",
                             "value": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName2'))]"
                         }
