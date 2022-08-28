@@ -114,10 +114,22 @@
                 "parameters": {
                     "sharedKey": {
                         "value": "[parameters('sharedKey')]"
+                    },
+                    "azureVNG": {
+                        "value": "[reference('azureLinkedTemplate').outputs.VNGResourceID.value]"
+                    },
+                    "azureLNG": {
+                        "value": "[reference('azureLinkedTemplate').outputs.LNGResourceID.value]"
+                    },
+                    "onPremVNG": {
+                        "value": "[reference('onPremLinkedTemplate').outputs.VNGResourceID.value]"
+                    },
+                    "onPremLNG": {
+                        "value": "[reference('onPremLinkedTemplate').outputs.LNGResourceID.value]"
                     }
                 },
                 "templateLink": {
-                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/onPremLinkedTemplate",
+                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/azfwConnectionsTemplate",
                 "contentVersion":"1.0.0.0"
                 }
             }

@@ -7,6 +7,18 @@
             "metadata": {
                 "description": "Shared key (PSK) for IPSec tunnel"
             }
+        },
+        "azureVNG": {
+            "type": "string"
+        },
+        "azureLNG": {
+            "type": "string"
+        },
+        "onPremVNG": {
+            "type": "string"
+        },
+        "onPremLNG": {
+            "type": "string"
         }
     },
     "variables": {
@@ -22,13 +34,13 @@
             "type": "Microsoft.Network/connections",
             "apiVersion": "2020-08-01",
             "name": "[variables('connectionName1')]",
-            "location": "[deployment().location]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "virtualNetworkGateway1": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways',variables('gatewayHubName'))]"
+                    "id": "[parameters('azureVNG')]"
                 },
                 "localNetworkGateway2": {
-                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName2'))]"
+                    "id": "[parameters('onPremLNG')]"
                 },
                 "connectionType": "IPsec",
                 "routingWeight": 0,
@@ -40,13 +52,13 @@
             "type": "Microsoft.Network/connections",
             "apiVersion": "2020-08-01",
             "name": "[variables('connectionName2')]",
-            "location": "[deployment().location]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "virtualNetworkGateway1": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways',variables('gatewayRemoteName'))]"
+                    "id": "[parameters('onPremVNG')]"
                 },
                 "localNetworkGateway2": {
-                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName1'))]"
+                    "id": "[parameters('azureLNG')]"
                 },
                 "connectionType": "IPsec",
                 "routingWeight": 0,
