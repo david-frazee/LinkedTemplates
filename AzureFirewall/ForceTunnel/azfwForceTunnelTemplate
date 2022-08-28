@@ -104,28 +104,30 @@
             "name": "azfwConnectionsTemplate",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup1'))]",
-                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup2'))]",
                 "[resourceId('Microsoft.Resources/deployments', 'azureLinkedTemplate')]",
                 "[resourceId('Microsoft.Resources/deployments', 'onPremLinkedTemplate')]"
             ],
             "resourceGroup": "[parameters('resourceGroup1')]",
             "properties": {
                 "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "Inner"
+                },
                 "parameters": {
                     "sharedKey": {
                         "value": "[parameters('sharedKey')]"
                     },
                     "azureVNG": {
-                        "value": "[reference('azureLinkedTemplate').outputs.VNGResourceID.value]"
+                        "value": "[reference('Microsoft.Resource/deployments', 'azureLinkedTemplate').outputs.VNGResourceID.value]"
                     },
                     "azureLNG": {
-                        "value": "[reference('azureLinkedTemplate').outputs.LNGResourceID.value]"
+                        "value": "[reference('Microsoft.Resource/deployments', 'azureLinkedTemplate').outputs.LNGResourceID.value]"
                     },
                     "onPremVNG": {
-                        "value": "[reference('onPremLinkedTemplate').outputs.VNGResourceID.value]"
+                        "value": "[reference('Microsoft.Resource/deployments', 'onPremLinkedTemplate').outputs.VNGResourceID.value]"
                     },
                     "onPremLNG": {
-                        "value": "[reference('onPremLinkedTemplate').outputs.LNGResourceID.value]"
+                        "value": "[reference('Microsoft.Resource/deployments', 'onPremLinkedTemplate').outputs.LNGResourceID.value]"
                     }
                 },
                 "templateLink": {
