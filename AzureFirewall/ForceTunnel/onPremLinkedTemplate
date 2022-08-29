@@ -412,6 +412,10 @@
                         "onPremLNGResourceID": {
                             "type": "string",
                             "value": "[resourceId('Microsoft.Network/localNetworkGateways', variables('localNetworkGatewayName2'))]"
+                        },
+                        "onPremFWResourceID": {
+                            "type": "string",
+                            "value": "[resourceId('Microsoft.Network/azureFirewalls', variables('remoteFirewallName'))]"
                         }
                     }
                 }
