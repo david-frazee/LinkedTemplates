@@ -31,9 +31,8 @@
         "localNetworkGatewayName2": "lgw-onprem-network",
         "connectionName1": "[concat('cn-', variables('localNetworkGatewayName2'),'-to-', variables('gatewayHubName'))]",
         "connectionName2": "[concat('cn-', variables('localNetworkGatewayName1'),'-to-', variables('gatewayRemoteName'))]",
-        "scriptName": "PowerShellDefaultSite",
-        "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
-    },
+        "scriptName": "PowerShellDefaultSite"
+   },
     "resources": [
         {
             "type": "Microsoft.Network/connections",
