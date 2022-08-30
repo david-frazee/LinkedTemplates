@@ -93,7 +93,7 @@
                 "scriptContent": "
                     $LocalGateway = Get-AzLocalNetworkGateway -Name 'lgw-onprem-network' -ResourceGroupName 'rg-fw-onpremv2'
                     $VirtualGateway = Get-AzVirtualNetworkGateway -Name 'vgw-vnet-hub-secured' -ResourceGroupName 'rg-fw-azurev2'
-                    Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite '$LocalGateway' -VirtualNetworkGateway '$VirtualGateway'",
+                    Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway",
                 "timeout": "PT5M",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
