@@ -149,7 +149,7 @@
                     }
                 },
                 "templateLink": {
-                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/azfwConnectionsTemplate.json",
+                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/azfwConnectionsLinkedTemplate.json",
                 "contentVersion":"1.0.0.0"
                 }
             }
@@ -159,11 +159,11 @@
             "apiVersion": "2021-04-01",
             "name": "diagnosticLinkedTemplate",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup1'))]",
+                "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroup2'))]",
                 "azureLinkedTemplate",
                 "onPremLinkedTemplate"
             ],
-            "resourceGroup": "[parameters('resourceGroup1')]",
+            "resourceGroup": "[parameters('resourceGroup2')]",
             "properties": {
                 "mode": "Incremental",
                 "parameters": {
