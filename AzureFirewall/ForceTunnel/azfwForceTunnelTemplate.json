@@ -37,8 +37,6 @@
         }
     },
     "variables": {
-        "workspaceResourceID": "[concat('/subscriptions/', subscription().subscriptionId, '/rg-fw-azurev2/providers/microsoft.operationalinsights/workspaces/law-soc')]",
-        "onPremFirewallResourceID": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/rg-fw-onpremv2/providers/Microsoft.Network/azureFirewalls/azfw-vnet-onprem')]",
         "roleAssignmentId": "[guid(concat(subscription().id, 'contributor'))]",
         "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
     },
