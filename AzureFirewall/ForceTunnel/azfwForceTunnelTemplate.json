@@ -4,16 +4,16 @@
     "parameters": {
         "resourceGroup1": {
             "type": "string",
-            "defaultValue": "rg-fw-azurev2",
+            "defaultValue": "rg-fw-azure",
             "metadata": {
-                "description": "Resource Group for the Azure environment"
+                "description": "Resource Group for the Azure environment. Do not change this value."
             }
         },
         "resourceGroup2": {
             "type": "string",
-            "defaultValue": "rg-fw-onpremv2",
+            "defaultValue": "rg-fw-onprem",
             "metadata": {
-                "description": "Resource Group for the on-premises environment"
+                "description": "Resource Group for the on-premises environment. Do not change this value."
             }
         },
         "adminUserName": {
