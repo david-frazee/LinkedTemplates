@@ -149,7 +149,7 @@
                     }
                 },
                 "templateLink": {
-                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/azfwConnectionsTemplate.json",
+                "uri":"https://raw.githubusercontent.com/david-frazee/LinkedTemplates/main/AzureFirewall/ForceTunnel/azfwConnectionsLinkedTemplate.json",
                 "contentVersion":"1.0.0.0"
                 }
             }
