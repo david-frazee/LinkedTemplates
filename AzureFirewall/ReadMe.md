@@ -133,9 +133,7 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 14.	Enter a Shared key (PSK) and click Enable BGP. Select OK.
 15.	Now make a second Connection for vgw-vnet-onprem. Use the same steps as above and Name the Connection cn-lgw-azure-network-to-vgw-vnet-onprem.
 
-***Note***
-
-***Since we cannot broadcast 0.0.0.0/0 in this environment, we’ll have to run a manual step using Azure PowerShell/CloudShell to enable force tunneling on the VPN gateways themselves. Open a CloudShell session in the Azure Portal and enter these commands.***
+***Note: Since we cannot broadcast 0.0.0.0/0 in this environment, we’ll have to run a manual step using Azure PowerShell/CloudShell to enable force tunneling on the VPN gateways themselves. Open a CloudShell session in the Azure Portal and enter these commands.***
 
 > **$LocalGateway = Get-AzLocalNetworkGateway -Name 'lgw-onprem-network' -ResourceGroupName 'rg-fw-onprem'**
 
@@ -183,11 +181,9 @@ For the on-premises firewall, we’ll use the same steps from configuring the Az
 10.	Select Add. 
  
 
-***Notes:***
+***Notes: When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration.***
 
-***•	When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration.***
-
-***•	Creating Azure Firewall with Availability Zones that use newly created Public IPs is currently not supported. Zonal Public IPs created beforehand may be used without issue or you can use Azure PowerShell, CLI, and ARM Templates for the deployment. For more information about these known issues, see Known Issues.***
+*** Creating Azure Firewall with Availability Zones that use newly created Public IPs is currently not supported. Zonal Public IPs created beforehand may be used without issue or you can use Azure PowerShell, CLI, and ARM Templates for the deployment. For more information about these known issues, see Known Issues.***
 
 #### Create Route Tables for environment  
 We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to force traffic to the Azure Firewall; 1 for the Azure Firewall to force traffic to on-premises; 1 for the on-premises virtual network gateway; and 1 for the on-premises network to return traffic back to its respective firewall. 
