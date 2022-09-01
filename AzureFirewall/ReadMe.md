@@ -38,15 +38,15 @@ For this environment, we'll need to make 2 separate Resource Groups with the fol
 
 1. Resource Group 1 called rg-fw-azure which will contain all the resources representing an Azure environment.
    - A Hub Virtual Network called vnet-hub-secured with the following configuration:
-    - IPv4 Address space of 192.168.0.0/23
-    - The following subnets will be created:
-     - Subnet called GatewaySubnet with address range 192.168.0.0/27. The Virtual Network Gateway will be deployed in this subnet, and the subnet name must be GatewaySubnet.
-     - Subnet called AzureFirewallSubnet with address range 192.168.0.64/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
-     - Subnet called AzureFirewallManagementSubnet with address range 192.168.0.128/26. The firewall management interfaces will be in this subnet, and the subnet name must be AzureFirewallManagementSubnet.
+     - IPv4 Address space of 192.168.0.0/23
+     - The following subnets will be created:
+       - Subnet called GatewaySubnet with address range 192.168.0.0/27. The Virtual Network Gateway will be deployed in this subnet, and the subnet name must be GatewaySubnet.
+       - Subnet called AzureFirewallSubnet with address range 192.168.0.64/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
+       - Subnet called AzureFirewallManagementSubnet with address range 192.168.0.128/26. The firewall management interfaces will be in this subnet, and the subnet name must be AzureFirewallManagementSubnet.
    - A Spoke Virtual Network called vnet-spoke-workers with the following configuration:
-    - IPv4 Address space of 192.168.2.0/24
-    - The following subnets will be created:
-     - Subnet called snet-trust-workers with address range 192.168.2.0/28. 
+     - IPv4 Address space of 192.168.2.0/24
+     - The following subnets will be created:
+       - Subnet called snet-trust-workers with address range 192.168.2.0/28. 
 1. First list item
    - First nested list item
      - Second nested list item
