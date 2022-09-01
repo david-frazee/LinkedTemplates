@@ -246,22 +246,13 @@ Now that we’ve created the necessary resources and configured the environment,
 
 | Resource |  Purpose |
 |----------|---------|
-| Virtual Network-1 |  VN1(Hub) has 2 Subnets 10.0.25.0/26 & 10.0.25.64/26 peered to VN1 and VN2 (Enabled with DDoSProtection)|
-| Virtual Network-2 |  VN2(Spoke1) has 2 Subnets 10.0.27.0/26 & 10.0.27.64/26 peered to VN2 |
-| Virtual Network-3 |  VN3(Spoke2) has 2 Subnets 10.0.28.0/26 & 10.0.28.64/26 peered to VN1 |
-| PublicIPAddress-1 |  Static Public IP address for Application gateway |
-| PublicIPAddress-2 |  Static Public IP address for Azure firewall |
-| Virtual Machine-1 | Windows 10 Machine connected to VN2(subnet1) |
-| Virtual Machine-2 | Kali Linux Box connected to VN2(subnet2) |
-| Virtual Machine-3 | Server 2019 Machine connected to VN3(subnet1) |
-| Network Security Group-1 | Pre-configured NSG to Virtual Networks associated to VN2 subnets |
-| Network Security Group-2 | Pre-configured NSG to Virtual Networks associated to VN3 subnets |
-| Route Table | Pre-configured RT Associated to VN2 and VN3 subnets with default route pointing to Azure firewall private IP address |
-| Application Gateway v2 (WAF) | Pre-configured to publish webapp on HTTP on Public Interface|
-| Azure Firewall Premium with Firewall Manager | Pre-configured with RDP(DNAT) rules to 3 VM's and allow search engine access(application rules) from VM's. Network rule configured to allow SMB, RDP and SSH access between VM's. Azure firewall is deployed in Hub Virtual Network managed by Firewall manager |
-| Frontdoor | Pre-configured designer with Backend pool as Applicaion gateway public interface  |
-| WebApp(PaaS) | Pre-configured app for Frontdoor and Application Gateway WAF testing |  
-
+| Resource Group 1 |  Resource Group named rg-fw-azure to hold Azure environment resources |
+| Resource Group 2 |  Resource Group named rg-fw-onprem to hold on-premises environment resources|
+| Role Assignment |  Contributor role assignment for User Assigned Managed Identity with scope set to Subscription |
+| Linked Template 1 |  azureLinkedTemplate.json which will deploy the bulk of the Azure environment resources |
+| Linked Template 2 |  onPremLinkedTemplate.json which will deploy the on-premises environment resources |
+| Linked Template 3 |  azfwConnectionLinkedTemplate.json will create the connection objects between the Virtual Network Gateways and configure the Gateway Default Site |
+| Linked Template 4 |  diagnosticsLinkedTemplate.json will create a diagnostic settings for the on-premises firewall |
 
 > This build has diagnostic settings enabled by default; it requires a Log Analytics workspace for logs to be collected. https://docs.microsoft.com/en-us/azure/azure-monitor/learn/quick-create-workspace  
 
