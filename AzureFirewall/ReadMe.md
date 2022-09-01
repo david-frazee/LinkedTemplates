@@ -56,7 +56,7 @@ For this environment, we'll need to make 2 separate Resource Groups with the fol
        - Subnet called snet-onprem-workers with address range 10.100.0.64/28.
        - Subnet called AzureFirewallSubnet with address range 10.100.0.128/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
 
-***Note: The minimum size of the AzureFirewallSubnet subnet is /26. For more information about the subnet size, see Azure Firewall FAQ. The same goes for AzureFirewallManagementSubnet subnet where the minimum subnet is /26, see Forced Tunneling Configuration.*** 
+***Note: The minimum size of the AzureFirewallSubnet subnet is /26. For more information about the subnet size, see [Azure Firewall FAQ](https://docs.microsoft.com/en-us/azure/firewall/firewall-faq#why-does-azure-firewall-need-a--26-subnet-size). The same goes for AzureFirewallManagementSubnet subnet where the minimum subnet is /26, see [Forced Tunneling Configuration](https://docs.microsoft.com/en-us/azure/firewall/forced-tunneling#forced-tunneling-configuration).*** 
 
 Open the rg-fw-azure resource group and select the vnet-hub-secured virtual network. In the left column, select Firewall.
 Select Click here to add a new firewall. 
