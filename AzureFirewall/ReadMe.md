@@ -72,11 +72,12 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 15.	Now make a second Connection for vgw-vnet-onprem. Use the same steps as above and Name the Connection cn-lgw-azure-network-to-vgw-vnet-onprem.
 
 ***Note***
+
 ***Since we cannot broadcast 0.0.0.0/0 in this environment, we’ll have to run a manual step using Azure PowerShell/CloudShell to enable force tunneling on the VPN gateways themselves. Open a CloudShell session in the Azure Portal and enter these commands.***
 
-**$LocalGateway = Get-AzLocalNetworkGateway -Name "lgw-onprem-network" -ResourceGroupName "rg-fw-onprem"**
-**$VirtualGateway = Get-AzVirtualNetworkGateway -Name "vgw-vnet-hub-secured" -ResourceGroupName "rg-fw-azure"**
-**Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway**
+> **$LocalGateway = Get-AzLocalNetworkGateway -Name 'lgw-onprem-network' -ResourceGroupName 'rg-fw-onprem'**
+> **$VirtualGateway = Get-AzVirtualNetworkGateway -Name 'vgw-vnet-hub-secured' -ResourceGroupName 'rg-fw-azure'**
+> **Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway**
 
 We should then see that the gateway vgw-vnet-hub-secured has learned a 0.0.0.0/0 route. It will not show that the Next hop is the BGP peer IP of the vgw-vnet-onprem, but if we defined the correct Local network gateway in the above command, the traffic will traverse the tunnel.
 
