@@ -120,7 +120,7 @@ For the on-premises firewall, we’ll use the same steps from configuring the Az
 ***Notes:***
 
 ***•	When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration.***
- 
+
 ***•	Creating Azure Firewall with Availability Zones that use newly created Public IPs is currently not supported. Zonal Public IPs created beforehand may be used without issue or you can use Azure PowerShell, CLI, and ARM Templates for the deployment. For more information about these known issues, see Known Issues.***
 
 #### Create Route Tables for environment  
@@ -166,7 +166,10 @@ We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to forc
 27.	 In the left column, select Subnets and select Associate.
 28.	 Under Associate subnet, for Virtual network, select vnet-onprem and for Subnet, select GatewaySubnet. Select OK.
 
-***Note: When Forced Tunneling mode is not enabled, you’ll find that applying a user-defined route to force all traffic on the AzureFirewallSubnet will not work. This is due to the service management traffic requiring direct access to the internet. Creating a dedicated subnet called “AzureFirewallManagementSubnet” and enabling Forced Tunneling mode upon creation will allow for a successful deployment.***
+***Note:***
+
+***When Forced Tunneling mode is not enabled, you’ll find that applying a user-defined route to force all traffic on the AzureFirewallSubnet will not work. This is due to the service management traffic requiring direct access to the internet. Creating a dedicated subnet called “AzureFirewallManagementSubnet” and enabling Forced Tunneling mode upon creation will allow for a successful deployment.***
+
 ***If you are using ExpressRoute with default route (0.0.0.0/0) broadcasted, this step is not supported. You can learn more about this routing configuration under the Virtual network gateway section in User-defined Custom routes.***
 
 #### Create a Log Analytics Workspace and enable Diagnostic Settings for both Azure Firewalls
