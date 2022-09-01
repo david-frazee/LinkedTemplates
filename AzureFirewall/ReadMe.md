@@ -47,22 +47,16 @@ For this environment, we'll need to make 2 separate Resource Groups with the fol
      - IPv4 Address space of 192.168.2.0/24
      - The following subnets will be created:
        - Subnet called snet-trust-workers with address range 192.168.2.0/28. 
-1. First list item
-   - First nested list item
-     - Second nested list item
 
-IPv4 Address space of 192.168.2.0/24
-The following subnets will be created:
-Subnet called snet-trust-workers with address range 192.168.2.0/28. 
+2. Resource Group 2 called rg-fw-onprem which contains all the resources representing the on-premises environment.
+   - On-premises Virtual Network called vnet-onprem with the following configuration:
+     - IPv4 Address space of 10.100.0.0/24
+     - The following subnets will be created:
+       - Subnet called GatewaySubnet with address range 10.100.0.0/27. The Virtual Network Gateway will be deployed in this subnet, and the subnet name must be GatewaySubnet. 
+       - Subnet called snet-onprem-workers with address range 10.100.0.64/28.
+       - Subnet called AzureFirewallSubnet with address range 10.100.0.128/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
 
-Resource Group 2 called rg-fw-onprem which contains all the resources representing the on-premises environment.
-IPv4 Address space of 10.100.0.0/24
-The following subnets will be created:
-Subnet called GatewaySubnet with address range 10.100.0.0/27. The Virtual Network Gateway will be deployed in this subnet, and the subnet name must be GatewaySubnet. 
-Subnet called snet-onprem-workers with address range 10.100.0.64/28.
-Subnet called AzureFirewallSubnet with address range 10.100.0.128/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
-On-premises Virtual Network called vnet-onprem with the following configuration:
-Note: The minimum size of the AzureFirewallSubnet subnet is /26. For more information about the subnet size, see Azure Firewall FAQ. The same goes for AzureFirewallManagementSubnet subnet where the minimum subnet is /26, see Forced Tunneling Configuration. 
+***Note: The minimum size of the AzureFirewallSubnet subnet is /26. For more information about the subnet size, see Azure Firewall FAQ. The same goes for AzureFirewallManagementSubnet subnet where the minimum subnet is /26, see Forced Tunneling Configuration.*** 
 
 Open the rg-fw-azure resource group and select the vnet-hub-secured virtual network. In the left column, select Firewall.
 Select Click here to add a new firewall. 
