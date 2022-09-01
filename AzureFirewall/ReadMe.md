@@ -143,6 +143,10 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 
 > **Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway**
 
+<p align="center">
+<img src="https://github.com/david-frazee/LinkedTemplates/blob/main/AzureFirewall/Media/DefaultSite.png">
+</p>
+
 We should then see that the gateway vgw-vnet-hub-secured has learned a 0.0.0.0/0 route. It will not show that the Next hop is the BGP peer IP of the vgw-vnet-onprem, but if we defined the correct Local network gateway in the above command, the traffic will traverse the tunnel.
 
 #### Create the On-premises Firewall and Configure the Policy
