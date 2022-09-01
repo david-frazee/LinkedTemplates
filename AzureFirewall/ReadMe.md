@@ -28,10 +28,76 @@ Please use this location as a reference on how this powershell commandlet works:
 
 
 ## Step-by-step documentation:
-If you'd like more detailed step-by-step instructions on how to deploy this lab, follow the instructions below.
+If you'd like more detailed step-by-step instructions on how to deploy this lab via the Azure Portal, follow the instructions below.
 
 ## Building the environment to test traffic through the Azure Firewall in Forced Tunnelling Mode
+
+Environment Details:
+
+For this environment, we'll need to make 2 separate Resource Groups with the following Virtual Network configurations within.
+
+1. Resource Group 1 called rg-fw-azure which will contain all the resources representing an Azure environment.
+   -A Hub Virtual Network called vnet-hub-secured with the following configuration:
+    -IPv4 Address space of 192.168.0.0/23
+    -The following subnets will be created:
+     -Subnet called GatewaySubnet with address range 192.168.0.0/27. The Virtual Network Gateway will be deployed in this subnet, and the subnet name must be GatewaySubnet.
+     -Subnet called AzureFirewallSubnet with address range 192.168.0.64/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
+     -Subnet called AzureFirewallManagementSubnet with address range 192.168.0.128/26. The firewall management interfaces will be in this subnet, and the subnet name must be AzureFirewallManagementSubnet.
+   -A Spoke Virtual Network called vnet-spoke-workers with the following configuration:
+    -IPv4 Address space of 192.168.2.0/24
+    -The following subnets will be created:
+     -Subnet called snet-trust-workers with address range 192.168.2.0/28. 
+
+
+IPv4 Address space of 192.168.2.0/24
+The following subnets will be created:
+Subnet called snet-trust-workers with address range 192.168.2.0/28. 
+
+Resource Group 2 called rg-fw-onprem which contains all the resources representing the on-premises environment.
+IPv4 Address space of 10.100.0.0/24
+The following subnets will be created:
+Subnet called GatewaySubnet with address range 10.100.0.0/27. The Virtual Network Gateway will be deployed in this subnet, and the subnet name must be GatewaySubnet. 
+Subnet called snet-onprem-workers with address range 10.100.0.64/28.
+Subnet called AzureFirewallSubnet with address range 10.100.0.128/26. The Azure Firewall will be deployed in this subnet, and the subnet name must be AzureFirewallSubnet.
+On-premises Virtual Network called vnet-onprem with the following configuration:
+Note: The minimum size of the AzureFirewallSubnet subnet is /26. For more information about the subnet size, see Azure Firewall FAQ. The same goes for AzureFirewallManagementSubnet subnet where the minimum subnet is /26, see Forced Tunneling Configuration. 
+
+Open the rg-fw-azure resource group and select the vnet-hub-secured virtual network. In the left column, select Firewall.
+Select Click here to add a new firewall. 
+For Resource group, select rg-fw-azure, and for Name, type azfw-vnet-hub-secured.
+For Region, select the same location of the virtual network and leave Availability zone as None.
+For Firewall tier, select Standard and keep Firewall management on Use a Firewall Policy to manage this firewall.
+For Firewall policy, select Add new. 
+Under Create a new Firewall Policy, for Policy name, type pol-azfw-vnet-hub and for Region, select the same location used previously. 
+For Policy tier, select Standard and select OK.
+For Choose a virtual network, select Use existing and select vnet-hub-secured in the Virtual network drop-down.
+ For Public IP address, select Add new. 
+ Under Add a public IP, for Name, type pip-azfw-vnet-hub-secured and select OK.
+ For Forced tunneling, click the selector to Enabled. 
+ For Management public IP address, select Add new. 
+ Under Add a public IP, for Name, type pip-azfw-vnet-hub-secured-manage and select OK. 
+ Select Review + create 
+ Select Create. 
  
+
+
+Now we’ll demonstrate how to configure the Policy for testing in the following scenario. We’ll create a single DNAT rule to allow you to remote into the VM that will sit in the spoke network, 2 network rules for our communication between Azure and On-premises, and a single Application rule to allow traffic to the internet.
+
+Navigate to the pol-azfw-vnet-hub firewall policy and select the DNAT rules blade. Select Add a rule collection.
+For Name, type RemoteIn. Leave Rule collection type as DNAT. Make the Priority 1000, and leave Rule collection group as DefaultDnatRuleColletionGroup.
+For the Rule Name, type RDP. Leave Source type as IP Address and enter your Public IP as Source. For Protocol, select TCP & UDP and for Destination Ports, enter 33899. Leave Destination Type as IP Address and type the Public IP of the Azure Firewall in Destination. For Translated address, type 192.168.2.4 and for Translated port, type 3389. Click Add.
+Select the Network rules blade. Select Add a rule collection.
+For Name, type east-west. Leave Rule collection type as Network. Make the Priority 1000 and leave Rule collection action as Allow, and Rule collection group as DefaultNetworkRuleColletionGroup.
+This Collection will have 2 rules. For the first Rule Name, type azure-to-onprem. Leave Source type as IP Address and enter 192.168.2.0/24 as Source. For Protocol, select Any and for Destination Ports, enter *. Leave Destination Type as IP Address and type 10.100.0.0/24 in Destination.
+For the second Rule Name, type onprem-to-azure. Leave Source type as IP Address and enter 10.100.0.0/24 as Source. For Protocol, select Any and for Destination Ports, enter *. Leave Destination Type as IP Address and type 192.168.2.0/24 in Destination.
+Click Add.
+Select the Application rules blade. Select Add a rule collection.
+For Name, type Internet. Leave Rule collection type as Application. Make the Priority 1000 and leave Rule collection action as Allow, and Rule collection group as DefaultApplicationRuleColletionGroup.
+For the Rule Name, type internet. Leave Source type as IP Address and enter 192.168.2.0/24 as Source. For Protocol, type http:80, https:443 and for Destination Type leave as FQDN. Destination will be owaspdirect.azurewebsites.net.
+Click Add.
+
+
+
 We will walk through the steps to build out the environment to configure resources and routing required to force tunnel traffic through the Azure Firewall. 
  
 #### Create a Virtual Network Gateway for the Hub Virtual Network  
