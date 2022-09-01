@@ -78,6 +78,10 @@ For this environment, we'll need to make 2 separate Resource Groups with the fol
 
 ***Note: Creating Azure Firewall with Availability Zones that use newly created Public IPs is currently not supported. Zonal Public IPs created beforehand may be used without issue or you can use Azure PowerShell, CLI, and ARM Templates for the deployment. For more information about these known issues, see Known Issues.***
 
+<p align="center">
+<img src="https://github.com/david-frazee/LinkedTemplates/blob/main/AzureFirewall/Media/AzFWv2.gif">
+</p>
+
 #### Configure the Azure Firewall Policy
 1. Navigate to the pol-azfw-vnet-hub firewall policy and select the DNAT rules blade. Select Add a rule collection.
 2. For Name, type RemoteIn. Leave Rule collection type as DNAT. Make the Priority 1000, and leave Rule collection group as DefaultDnatRuleColletionGroup.
@@ -112,6 +116,10 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 2.	For Virtual network, select the drop-down menu and select vnet-onprem. The Subnet will auto-fill. 
 3.	For Public IP address, select Create new and use pip-vgw-vnet-onprem for the Public IP address name.
 
+<p align="center">
+<img src="https://github.com/david-frazee/LinkedTemplates/blob/main/AzureFirewall/Media/VNGv1.gif">
+</p>
+
 #### Create Connection between the 2 Virtual Network Gateways
 1.	Navigate to the Configuration blade of the Virtual network gateway, vgw-vnet-hub-secured. Check the button Configure BGP.
 2.	We’ll have to change the ASN to have our two gateways communicate. Change the ASN to 65521 and record the BGP peer IP address. Click Save.
@@ -142,6 +150,7 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 </p>
 
 We should then see that the gateway vgw-vnet-hub-secured has learned a 0.0.0.0/0 route. It will not show that the Next hop is the BGP peer IP of the vgw-vnet-onprem, but if we defined the correct Local network gateway in the above command, the traffic will traverse the tunnel.
+
 
 #### Create the On-premises Firewall and Configure the Policy
 For the on-premises firewall, we’ll use the same steps from configuring the Azure Firewall with defined changes. 
@@ -176,9 +185,11 @@ For the on-premises firewall, we’ll use the same steps from configuring the Az
 9.	For Virtual network gateway or Route Server, select Use the remote virtual network’s gateway or Route Server.
 10.	Select Add. 
  
-
 ***Note: When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration. This will be covered in the following sections.***
 
+<p align="center">
+<img src="https://github.com/david-frazee/LinkedTemplates/blob/main/AzureFirewall/Media/PeeringV1.gif">
+</p>
 
 #### Create Route Tables for environment  
 We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to force traffic to the Azure Firewall; 1 for the Azure Firewall to force traffic to on-premises; 1 for the on-premises virtual network gateway; and 1 for the on-premises network to return traffic back to its respective firewall. 
