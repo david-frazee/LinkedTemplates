@@ -34,7 +34,7 @@ If you'd like more detailed step-by-step instructions on how to deploy this lab,
  
 We will walk through the steps to build out the environment to configure resources and routing required to force tunnel traffic through the Azure Firewall. 
  
-**Create a Virtual Network Gateway for the Hub Virtual Network**  
+#### Create a Virtual Network Gateway for the Hub Virtual Network  
 1.	In the Azure portal, search for Virtual network gateways
 2.	Once in the Virtual network gateways blade, select Create. 
 3.	For Subscription, select your subscription. 
@@ -48,13 +48,13 @@ We will walk through the steps to build out the environment to configure resourc
 11.	Select Review + create. 
 12.	Select Create. 
  
-**Create a Virtual Network Gateway for the On-Premises Virtual Network**  
+#### Create a Virtual Network Gateway for the On-Premises Virtual Network  
 For the on-premises virtual network gateway, follow the steps from the previous section and make the necessary changes listed below.
 1.	For Name, type vgw-vnet-onprem, and make sure to select the same Region as your on-premises virtual network.
 2.	For Virtual network, select the drop-down menu and select vnet-onprem. The Subnet will auto-fill. 
 3.	For Public IP address, select Create new and use pip-vgw-vnet-onprem for the Public IP address name.
 
-**Create Connection between the 2 Virtual Network Gateways**
+#### Create Connection between the 2 Virtual Network Gateways
 1.	Navigate to the Configuration blade of the Virtual network gateway, vgw-vnet-hub-secured. Check the button Configure BGP.
 2.	We’ll have to change the ASN to have our two gateways communicate. Change the ASN to 65521 and record the BGP peer IP address. Click Save.
 3.	Record the Public IP address of the Virtual network gateway from the Overview blade. The Public IP address, ASN, & BGP peer IP address will be needed to configure the next resource, a Local network gateways.
@@ -71,16 +71,16 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 14.	Enter a Shared key (PSK) and click Enable BGP. Select OK.
 15.	Now make a second Connection for vgw-vnet-onprem. Use the same steps as above and Name the Connection cn-lgw-azure-network-to-vgw-vnet-onprem.
 
-*Note*
-*Since we cannot broadcast 0.0.0.0/0 in this environment, we’ll have to run a manual step using Azure PowerShell/CloudShell to enable force tunneling on the VPN gateways themselves. Open a CloudShell session in the Azure Portal and enter these commands.*
+***Note***
+***Since we cannot broadcast 0.0.0.0/0 in this environment, we’ll have to run a manual step using Azure PowerShell/CloudShell to enable force tunneling on the VPN gateways themselves. Open a CloudShell session in the Azure Portal and enter these commands.***
 
-$LocalGateway = Get-AzLocalNetworkGateway -Name "lgw-onprem-network" -ResourceGroupName "rg-fw-onprem"
-$VirtualGateway = Get-AzVirtualNetworkGateway -Name "vgw-vnet-hub-secured" -ResourceGroupName "rg-fw-azure"
-Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway 
+**$LocalGateway = Get-AzLocalNetworkGateway -Name "lgw-onprem-network" -ResourceGroupName "rg-fw-onprem"**
+**$VirtualGateway = Get-AzVirtualNetworkGateway -Name "vgw-vnet-hub-secured" -ResourceGroupName "rg-fw-azure"**
+**Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway**
 
 We should then see that the gateway vgw-vnet-hub-secured has learned a 0.0.0.0/0 route. It will not show that the Next hop is the BGP peer IP of the vgw-vnet-onprem, but if we defined the correct Local network gateway in the above command, the traffic will traverse the tunnel.
 
-**Create the On-premises Firewall and Configure the Policy** 
+#### Create the On-premises Firewall and Configure the Policy
 For the on-premises firewall, we’ll use the same steps from configuring the Azure Firewall with defined changes. 
 1.	Open the rg-fw-onprem resource group and select the vnet-onprem virtual network. In the left column, select Firewall.
 2.	Select Click here to add a new firewall. 
@@ -101,7 +101,7 @@ For the on-premises firewall, we’ll use the same steps from configuring the Az
 17.	 Create a second rule with Name azure-to-onprem. Leave Source type as IP Address and enter 192.168.2.0/24 as Source. For Protocol, select Any and for Destination Ports, enter *. Leave Destination Type as IP Address and type 10.100.0.0/24 in Destination.
 18.	 Click Add.
 
-**Set up Peering between Hub & Spoke VNets**
+#### Set up Peering between Hub & Spoke VNets
 1.	Open the rg-fw-azure resource group and select the vnet-hub-secured virtual network. 
 2.	In the left column, select Peerings and select +Add. 
 3.	For Peering link name, type vnet-hub-secured-to-vnet-spoke-workers. 
@@ -114,11 +114,11 @@ For the on-premises firewall, we’ll use the same steps from configuring the Az
 10.	Select Add. 
  
 
-*Notes:*
-*•	When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration.* 
-*•	Creating Azure Firewall with Availability Zones that use newly created Public IPs is currently not supported. Zonal Public IPs created beforehand may be used without issue or you can use Azure PowerShell, CLI, and ARM Templates for the deployment. For more information about these known issues, see Known Issues.*
+***Notes:***
+***•	When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration.*** 
+***•	Creating Azure Firewall with Availability Zones that use newly created Public IPs is currently not supported. Zonal Public IPs created beforehand may be used without issue or you can use Azure PowerShell, CLI, and ARM Templates for the deployment. For more information about these known issues, see Known Issues.***
 
-**Create Route Tables for environment**  
+#### Create Route Tables for environment  
 We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to force traffic to the Azure Firewall; 1 for the Azure Firewall to force traffic to on-premises; 1 for the on-premises virtual network gateway; and 1 for the on-premises network to return traffic back to its respective firewall. 
 1.	In the Azure portal, search for Route table and select Create.
 2.	For Subscription, select your subscription and for Resource group, select rg-fw-azure for the first 2 route tables.
@@ -131,7 +131,7 @@ We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to forc
 9.	For Name, type route-onprem-snets for the first route table, and route-gateway-snets for the second.
 10.	Leave Propagate gateway routes to Yes on both.
 
-**Configure User-Defined Routes to force traffic to Azure Firewall**  
+#### Configure User-Defined Routes to force traffic to Azure Firewall  
 1.	Open the rg-fw-azure resource group and select the route-spoke-snets route table. 
 2.	In the left column, select Routes and select Add.
 3.	For Route name, type send-all-to-fw. Select IP Addresses for Address prefix destination and type 0.0.0.0/0 for Destination IP addresses/CIDR ranges.
@@ -161,10 +161,10 @@ We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to forc
 27.	 In the left column, select Subnets and select Associate.
 28.	 Under Associate subnet, for Virtual network, select vnet-onprem and for Subnet, select GatewaySubnet. Select OK.
 
-*Note: When Forced Tunneling mode is not enabled, you’ll find that applying a user-defined route to force all traffic on the AzureFirewallSubnet will not work. This is due to the service management traffic requiring direct access to the internet. Creating a dedicated subnet called “AzureFirewallManagementSubnet” and enabling Forced Tunneling mode upon creation will allow for a successful deployment.*
-*If you are using ExpressRoute with default route (0.0.0.0/0) broadcasted, this step is not supported. You can learn more about this routing configuration under the Virtual network gateway section in User-defined Custom routes.*
+***Note: When Forced Tunneling mode is not enabled, you’ll find that applying a user-defined route to force all traffic on the AzureFirewallSubnet will not work. This is due to the service management traffic requiring direct access to the internet. Creating a dedicated subnet called “AzureFirewallManagementSubnet” and enabling Forced Tunneling mode upon creation will allow for a successful deployment.***
+***If you are using ExpressRoute with default route (0.0.0.0/0) broadcasted, this step is not supported. You can learn more about this routing configuration under the Virtual network gateway section in User-defined Custom routes.***
 
-**Create a Log Analytics Workspace and enable Diagnostic Settings for both Azure Firewalls**
+#### Create a Log Analytics Workspace and enable Diagnostic Settings for both Azure Firewalls
 1.	In the Azure portal, search for Log Analytics workspaces and select Create.
 2.	For Subscription, select your subscription and for Resource group, select rg-fw-azure
 3.	For Name, type law-soc and select the same Region you’ve used for the rest of the environment. Click Review + Create, Create.
