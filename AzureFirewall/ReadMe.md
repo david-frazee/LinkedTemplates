@@ -32,11 +32,11 @@ If you'd like more detailed step-by-step instructions on how to deploy this lab 
 
 ## Building the environment to test traffic through the Azure Firewall in Forced Tunnelling Mode
 
-Environment Details:
+**Environment Details:**
 
 For this environment, we'll need to make 2 separate Resource Groups with the following Virtual Network configurations within.
 
-1. Resource Group 1 called rg-fw-azure which will contain all the resources representing an Azure environment.
+1. Resource Group 1 called rg-fw-azure, which will contain all the resources representing the Azure environment.
    - A Hub Virtual Network called vnet-hub-secured with the following configuration:
      - IPv4 Address space of 192.168.0.0/23
      - The following subnets will be created:
@@ -177,7 +177,7 @@ For the on-premises firewall, we’ll use the same steps from configuring the Az
 10.	Select Add. 
  
 
-***Notes: When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration.***
+***Note: When Forced Tunneling is enabled, DNAT rules are no longer supported due to asymmetric routing. This can be resolved with a User-Defined Route on the AzureFirewallSubnet Route Table configuration. This will be covered in the following sections.***
 
 
 #### Create Route Tables for environment  
@@ -223,11 +223,7 @@ We’ll be creating 4 Route Tables in this step. 1 for the Spoke Network to forc
 27.	 In the left column, select Subnets and select Associate.
 28.	 Under Associate subnet, for Virtual network, select vnet-onprem and for Subnet, select GatewaySubnet. Select OK.
 
-***Note:***
-
-***When Forced Tunneling mode is not enabled, you’ll find that applying a user-defined route to force all traffic on the AzureFirewallSubnet will not work. This is due to the service management traffic requiring direct access to the internet. Creating a dedicated subnet called “AzureFirewallManagementSubnet” and enabling Forced Tunneling mode upon creation will allow for a successful deployment.***
-
-***If you are using ExpressRoute with default route (0.0.0.0/0) broadcasted, this step is not supported. You can learn more about this routing configuration under the Virtual network gateway section in User-defined Custom routes.***
+***Note: If you are using ExpressRoute with default route (0.0.0.0/0) broadcasted, this step is not supported. You can learn more about this routing configuration under the Virtual network gateway section in [User-defined](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview#user-defined) Custom routes.***
 
 #### Create a Log Analytics Workspace and enable Diagnostic Settings for both Azure Firewalls
 1.	In the Azure portal, search for Log Analytics workspaces and select Create.
