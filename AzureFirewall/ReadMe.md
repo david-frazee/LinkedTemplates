@@ -78,6 +78,7 @@ For the on-premises virtual network gateway, follow the steps from the previous 
 > **$LocalGateway = Get-AzLocalNetworkGateway -Name 'lgw-onprem-network' -ResourceGroupName 'rg-fw-onprem'**
 
 > **$VirtualGateway = Get-AzVirtualNetworkGateway -Name 'vgw-vnet-hub-secured' -ResourceGroupName 'rg-fw-azure'**
+
 > **Set-AzVirtualNetworkGatewayDefaultSite -GatewayDefaultSite $LocalGateway -VirtualNetworkGateway $VirtualGateway**
 
 We should then see that the gateway vgw-vnet-hub-secured has learned a 0.0.0.0/0 route. It will not show that the Next hop is the BGP peer IP of the vgw-vnet-onprem, but if we defined the correct Local network gateway in the above command, the traffic will traverse the tunnel.
