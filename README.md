@@ -235,17 +235,17 @@ ms.service: cloud management
 
 4. In left Menu, under Monitoring, select diagnostic settings and verify the settings. You should see a Diagnostic setting named "VN-HUBStructuredLogs".
 
-5. -You will see the following Logs selected to be collected and forwarded to the CyberSecuritySOC Log Analytics workspace: 
-    - Azure Firewall Network Rule Hit
-    - Azure Firewall Application Rule Hit
-    - Azure Firewall Nat Rule Hit
-    - Azure Firewall ThreatIntel Hit
-    - Azure Firewall Idps Signature Hit
-    - Azure Firewall Dns query Hit
-    - Azure Firewall Fqdn Resolution Failure Hit
-    - Azure Firewall Network Rule Aggregation Hit (Used for Policy Analytics)
-    - Azure Firewall Application Rule Aggregation Hit (Used for Policy Analytics)
-    - Azure Firewall Nat Rule Aggregation Hit (Used for Policy Analytics)
+5. You will see the following Logs selected to be collected and forwarded to the CyberSecuritySOC Log Analytics workspace: 
+   - Azure Firewall Network Rule Hit
+   - Azure Firewall Application Rule Hit
+   - Azure Firewall Nat Rule Hit
+   - Azure Firewall ThreatIntel Hit
+   - Azure Firewall Idps Signature Hit
+   - Azure Firewall Dns query Hit
+   - Azure Firewall Fqdn Resolution Failure Hit
+   - Azure Firewall Network Rule Aggregation Hit (Used for Policy Analytics)
+   - Azure Firewall Application Rule Aggregation Hit (Used for Policy Analytics)
+   - Azure Firewall Nat Rule Aggregation Hit (Used for Policy Analytics)
 
 6. You will also see under Destination details, that the Destination table has **Resource specific** selected. This ensures that we are using the resource specific log tables.
 
