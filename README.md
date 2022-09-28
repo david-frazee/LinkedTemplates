@@ -1,4 +1,3 @@
-# LinkedTemplates
 ---
 title: Azure Firewall Demo
 description: Azure Firewall Demo
