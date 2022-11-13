@@ -18,7 +18,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: location
 }
 
-module fwBasicResources 'modules/fwBasicTemplate' = {
+module fwBasicResources 'modules/fwBasicTemplate.bicep' = {
   name: 'fwBasicResources'
   scope: rg
   params: {
